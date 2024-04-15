@@ -2,8 +2,10 @@
 
 #include <juce_audio_processors/juce_audio_processors.h>
 
+#define INITFREQVAL 440.0
+
 //==============================================================================
-class AudioPluginAudioProcessor final : public juce::AudioProcessor
+class AudioPluginAudioProcessor : public juce::AudioProcessor
 {
 public:
     //==============================================================================
@@ -42,7 +44,25 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+    //==============================================================================
+    double getCurrentSampleRate() const { return currentSampleRate; }
+    void setCurrentSampleRate(double sampleRate) { currentSampleRate = sampleRate; }
+
+    double getCurrentAngle() const { return currentAngle; }
+    void setCurrentAngle(double angle) { currentAngle = angle; }
+
+    double getAngleDelta() const { return angleDelta; }
+    void setAngleDelta(double delta) { angleDelta = delta; }
+
+    bool getIsOn() const { return isOn; }
+    void setIsOn(bool state) { isOn = state; }
+
 private:
+    double currentSampleRate = {0.0};
+    double currentAngle = {0.0};
+    double angleDelta = {0.0};
+    bool isOn = {false};
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)
 };

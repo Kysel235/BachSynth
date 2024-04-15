@@ -88,7 +88,13 @@ void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
-    juce::ignoreUnused (sampleRate, samplesPerBlock);
+    juce::ignoreUnused (samplesPerBlock);
+
+    (*this).setCurrentSampleRate(sampleRate);
+
+    // initial run of updateAngleDelta without the reference to the editor
+    auto cyclesPerSample = INITFREQVAL / currentSampleRate;
+    angleDelta = cyclesPerSample * 2.0 * juce::MathConstants<double>::pi; 
 }
 
 void AudioPluginAudioProcessor::releaseResources()
@@ -145,11 +151,25 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     // the samples and the outer loop is handling the channels.
     // Alternatively, you can process the samples with the channels
     // interleaved by keeping the same state.
+
+    auto level = 0.125f;
+
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
         auto* channelData = buffer.getWritePointer (channel);
         juce::ignoreUnused (channelData);
         // ..do something to the data...
+        for (auto sample = 0; sample < buffer.getNumSamples(); ++sample)
+        {
+            auto currentSample = (float) std::sin(currentAngle);
+            currentAngle += angleDelta;
+            if (isOn)
+            {
+                channelData[sample] = currentSample * level;
+            } else {
+                channelData[sample] = 0.0;
+            }
+        }
     }
 }
 
