@@ -24,7 +24,7 @@ private:
     //==============================================================================
     // Editor components
     juce::Slider soundFrequency;
-    juce::ToggleButton onOff;
+    juce::TextButton onOff;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessorEditor)
 };

@@ -11,41 +11,39 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     : AudioProcessorEditor (&p), processorRef (p)
 {
     // Set the size of the window
-    setSize (800, 600);
+    setSize (300, 400);
 
     // Add the components to the window
     // The frequency slider
-    // addAndMakeVisible(&soundFrequency);
-    // soundFrequency.setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    // soundFrequency.setRange (100.0, 15000.0, 1.0);
-    // soundFrequency.setTextBoxStyle (juce::Slider::NoTextBox, false, 90, 0);
-    // soundFrequency.setPopupDisplayEnabled (true, false, this);
-    // soundFrequency.setTextValueSuffix (" Hz");
-    // soundFrequency.setValue(INITFREQVAL);
-    // soundFrequency.setSkewFactorFromMidPoint(500.0);
-    // soundFrequency.onValueChange = [this]
-    // {
-    //     if((*this).processorRef.getCurrentSampleRate() > 0.0)
-    //     {
-    //         updateAngleDelta();
-    //     }
-    // };
+    addAndMakeVisible(&soundFrequency);
+    soundFrequency.setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
+    soundFrequency.setRange (100.0, 15000.0, 1.0);
+    soundFrequency.setTextBoxStyle (juce::Slider::NoTextBox, false, 90, 0);
+    soundFrequency.setPopupDisplayEnabled (true, false, this);
+    soundFrequency.setTextValueSuffix (" Hz");
+    soundFrequency.setValue(INITFREQVAL);
+    soundFrequency.setSkewFactorFromMidPoint(500.0);
+    soundFrequency.onValueChange = [this]
+    {
+        if((*this).processorRef.getCurrentSampleRate() > 0.0)
+        {
+            updateAngleDelta();
+        }
+    };
 
     // The power button
-    addAndMakeVisible(&onOff);
+    addAndMakeVisible(onOff);
     onOff.setButtonText(juce::String("Power"));
-    onOff.setToggleState(false, juce::NotificationType::dontSendNotification);
-    // Set the button color to red
     onOff.setColour(juce::TextButton::buttonColourId, juce::Colours::black);
+    onOff.setColour(juce::TextButton::buttonOnColourId, juce::Colours::white);
+    onOff.setColour(juce::TextButton::textColourOffId, juce::Colours::white);
+    onOff.setColour(juce::TextButton::textColourOnId, juce::Colours::black);
+    onOff.setClickingTogglesState(true);
 
-    // Set the text color to white
-    onOff.setColour(juce::TextButton::textColourOnId, juce::Colours::blue);
-    onOff.setColour(juce::TextButton::textColourOffId, juce::Colours::blue);
     onOff.onClick = [this]
     {
         (*this).processorRef.setIsOn(onOff.getToggleStateValue()==juce::Value(true));
     };
-
 }
 
 /**
@@ -73,8 +71,8 @@ void AudioPluginAudioProcessorEditor::paint (juce::Graphics& g)
     g.fillAll (juce::Colours::white);
 
     g.setColour (juce::Colours::black);
-    g.setFont (15.0f);
-    //g.drawFittedText ("Basic sin oscillator", 0, 0, getWidth(), 30, juce::Justification::centred, 1);
+    g.setFont (30.0f);
+    g.drawFittedText ("Basic sin oscillator", 0, 0, getWidth(), 30, juce::Justification::centred, 1);
 }
 
 /**
@@ -85,6 +83,15 @@ void AudioPluginAudioProcessorEditor::resized()
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
 
-    onOff.setBounds(10, 40, 60, 30);
-    //soundFrequency.setBounds(10, 80, 100, 100);
+    //auto leftMargin = getWidth() * 0.07;
+    auto topMargin = getHeight() * 0.05; //TODO layout nicer maybe with illustrator
+    auto titleHeight = 30;
+    auto vertSpacing = 10;
+    auto buttonWidth = getWidth() * 0.2;
+    auto buttonHeight = buttonWidth * 0.5;
+
+    auto freqSliderSize = 150;
+
+    onOff.setBounds(getWidth()/2-buttonWidth/2, topMargin+titleHeight+vertSpacing, buttonWidth, buttonHeight);
+    soundFrequency.setBounds(getWidth()/2-freqSliderSize/2, 160, freqSliderSize, freqSliderSize);
 }

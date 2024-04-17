@@ -58,10 +58,11 @@ public:
     void setIsOn(bool state) { isOn = state; }
 
 private:
-    double currentSampleRate = {0.0};
-    double currentAngle = {0.0};
-    double angleDelta = {0.0};
-    bool isOn = {false};
+    double currentSampleRate{0.0};
+    double currentAngle{0.0};
+    double angleDelta{0.0};
+    bool isOn{false};
+    
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)
